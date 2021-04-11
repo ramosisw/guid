@@ -69,12 +69,20 @@ func NewString() string {
 	return New().String()
 }
 
-// IsGuid returns true if the string contains a properly formatted Guid.
-func IsGuid(s string) bool {
+// IsGuidFormat returns nil if the string contains a properly formatted Guid.
+func IsGuidFormat(s string) err {
 	if len(s) != 36 {
-		return false
+		return ErrInvalid
 	}
 	if s[8] != '-' || s[13] != '-' || s[18] != '-' || s[23] != '-' {
+		return ErrInvalid
+	}
+	return nil
+}
+
+// IsGuid returns true if the string contains a properly formatted Guid.
+func IsGuid(s string) bool {
+	if err := IsGuidFormat(s); err != nil {
 		return false
 	}
 	for _, sub := range [...]string{
@@ -91,10 +99,7 @@ func IsGuid(s string) bool {
 
 // ParseString returns the Guid represented by the string s.
 func ParseString(s string) (*Guid, error) {
-	if len(s) != 36 {
-		return nil, ErrInvalid
-	}
-	if s[8] != '-' || s[13] != '-' || s[18] != '-' || s[23] != '-' {
+	if err := IsGuidFormat(s); err != nil {
 		return nil, ErrInvalid
 	}
 	g := new(Guid)
