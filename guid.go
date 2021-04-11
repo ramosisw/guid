@@ -70,7 +70,7 @@ func NewString() string {
 }
 
 // IsGuidFormat returns nil if the string contains a properly formatted Guid.
-func IsGuidFormat(s string) err {
+func IsGuidFormat(s string) error {
 	if len(s) != 36 {
 		return ErrInvalid
 	}
